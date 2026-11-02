@@ -11,16 +11,9 @@ import type { Route } from "./+types/root";
 import "./app.css";
 
 export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
-  },
+  { rel: "icon", href: "/brand/favicon.svg", type: "image/svg+xml" },
+  { rel: "apple-touch-icon", href: "/brand/apple-touch-icon.svg" },
+  { rel: "manifest", href: "/site.webmanifest" },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -46,30 +39,36 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
+  if (isRouteErrorResponse(error) && error.status === 404) {
+    return (
+      <main id="main" className="py-24">
+        <div className="mx-auto max-w-xl px-4 text-center">
+          <h1 className="text-h1">Page not found</h1>
+          <p className="mt-4 text-muted">
+            The page you requested is not available.
+          </p>
+          <a href="/" className="mt-6 inline-block text-[var(--color-brand-hover)] underline">
+            Return home
+          </a>
+        </div>
+      </main>
+    );
+  }
+
+  let message = "Something went wrong";
   let details = "An unexpected error occurred.";
-  let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
+    message = `Error ${error.status}`;
+    details = error.statusText || details;
+  } else if (import.meta.env.DEV && error instanceof Error) {
     details = error.message;
-    stack = error.stack;
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-      )}
+    <main id="main" className="p-8">
+      <h1 className="text-h1">{message}</h1>
+      <p className="mt-2 text-muted">{details}</p>
     </main>
   );
 }

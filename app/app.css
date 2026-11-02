@@ -1,15 +1,306 @@
 @import "tailwindcss";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+@import "@fontsource/inter-tight/600.css";
+@import "@fontsource/inter-tight/700.css";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --color-text: #131e29;
+  --color-text-muted: #556b82;
+  --color-surface: #ffffff;
+  --color-background: #f5f6f7;
+  --color-border: #d5dadd;
+  --color-brand: #0070f2;
+  --color-brand-hover: #0057d2;
+  --color-brand-soft: #ebf8ff;
+  --color-accent-warm: #e38b16;
+  --color-shell: #1d2d3e;
+  --color-shell-deep: #0a141d;
+  --color-negative: #bb0000;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --radius-button: 0.5rem;
+  --radius-card: 0.75rem;
 }
 
-html,
-body {
-  @apply bg-white dark:bg-gray-950;
-
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    @apply bg-background text-text font-sans antialiased;
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  @media (min-width: 1024px) {
+    body {
+      font-size: 1.0625rem;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-brand) 28%, white);
+    color: var(--color-text);
+  }
+}
+
+@utility bg-background {
+  background-color: var(--color-background);
+}
+
+@utility bg-surface {
+  background-color: var(--color-surface);
+}
+
+@utility text-text {
+  color: var(--color-text);
+}
+
+@utility text-muted {
+  color: var(--color-text-muted);
+}
+
+@utility text-display {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 5.5vw + 0.4rem, 4.75rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+
+@utility text-h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.95rem, 2.9vw + 0.55rem, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.032em;
+}
+
+@utility text-h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.45rem, 1.7vw + 0.65rem, 1.95rem);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.022em;
+}
+
+@utility text-h3 {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+@utility text-body-lg {
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+@utility text-small {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+@utility text-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-brand);
+}
+
+@utility border-subtle {
+  border-color: color-mix(in srgb, var(--color-border) 90%, transparent);
+}
+
+.photo-scrim {
+  background: linear-gradient(
+    108deg,
+    color-mix(in srgb, var(--color-shell-deep) 90%, transparent) 0%,
+    color-mix(in srgb, var(--color-shell) 74%, transparent) 42%,
+    color-mix(in srgb, var(--color-shell) 28%, transparent) 100%
+  );
+}
+
+/* Cinematic hero: keep photo dominant; ink pools at the type baseline */
+.hero-scrim {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-shell-deep) 45%, transparent) 0%,
+      transparent 28%,
+      color-mix(in srgb, var(--color-shell-deep) 55%, transparent) 62%,
+      color-mix(in srgb, var(--color-shell-deep) 88%, transparent) 100%
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-shell-deep) 70%, transparent) 0%,
+      transparent 55%
+    );
+}
+
+.hero-stage {
+  min-height: 100svh;
+}
+
+.noise {
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  mix-blend-mode: soft-light;
+}
+
+.mesh-soft {
+  pointer-events: none;
+  background:
+    radial-gradient(
+      900px 420px at 8% -10%,
+      color-mix(in srgb, var(--color-brand) 10%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      700px 360px at 92% 110%,
+      color-mix(in srgb, var(--color-brand) 8%, transparent),
+      transparent 55%
+    );
+}
+
+.capability-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: var(--color-brand);
+  transition: width 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.capability-row:hover::before {
+  width: 3px;
+}
+
+.product-window {
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, #fff 18%, transparent);
+  background: #0f1c28;
+  box-shadow:
+    0 28px 70px color-mix(in srgb, #000 48%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--color-brand) 28%, transparent),
+    0 0 60px color-mix(in srgb, var(--color-brand) 18%, transparent);
+  will-change: transform;
+}
+
+.product-window__chrome {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.85rem;
+  background: color-mix(in srgb, #121f2b 92%, #0070f2);
+  border-bottom: 1px solid color-mix(in srgb, #fff 8%, transparent);
+}
+
+.product-window__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, #fff 25%, transparent);
+}
+
+.product-window__dot:nth-child(1) {
+  background: #ff5f57;
+}
+.product-window__dot:nth-child(2) {
+  background: #febc2e;
+}
+.product-window__dot:nth-child(3) {
+  background: #28c840;
+}
+
+.prose-axleta {
+  color: var(--color-text);
+}
+
+.prose-axleta h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 1.3vw + 0.9rem, 1.55rem);
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-axleta h3 {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-axleta p {
+  margin-bottom: 1rem;
+}
+
+.prose-axleta ul,
+.prose-axleta ol {
+  margin-bottom: 1rem;
+  padding-left: 1.25rem;
+}
+
+.prose-axleta li {
+  margin-bottom: 0.35rem;
+}
+
+.prose-axleta a {
+  color: var(--color-brand-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.prose-axleta blockquote {
+  border-left: 3px solid var(--color-brand);
+  padding-left: 1rem;
+  color: var(--color-text-muted);
+  margin: 1.5rem 0;
+}
+
+.prose-axleta code {
+  font-size: 0.9em;
+  background: var(--color-brand-soft);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+
+.prose-axleta pre {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: 1rem;
+  overflow-x: auto;
+  border-radius: var(--radius-button);
+  margin-bottom: 1rem;
 }

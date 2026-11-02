@@ -1,87 +1,57 @@
-# Welcome to React Router!
+# Axleta website
 
-A modern, production-ready template for building full-stack React applications using React Router.
+Marketing site for [Axleta](https://www.axleta.com) — React Router 8, TypeScript, Tailwind CSS v4, SAP Horizon design tokens, prerendered HTML, MDX-style Insights (Markdown + gray-matter).
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## Requirements
 
-## Features
+- Node.js **22+** (see `.nvmrc`)
+- npm
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
-
-## Getting Started
-
-### Installation
-
-Install the dependencies:
+## Setup
 
 ```bash
 npm install
+cp .env.example .env
 ```
 
-### Development
+Set `VITE_FORMSPREE_FORM_ID` in `.env` (local) and in Vercel project settings (production). Without it, the contact page shows `mailto:info@axleta.com` only.
 
-Start the development server with HMR:
+## Scripts
 
-```bash
-npm run dev
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Development server |
+| `npm run build` | Route check, production build, prerender, sitemap |
+| `npm run start` | Serve production SSR build |
+| `npm run typecheck` | React Router typegen + `tsc` |
+| `npm run check:routes` | Validate nav hrefs |
+| `npm run sitemap` | Write `public/sitemap.xml` |
+
+## Insights content
+
+Add Markdown under `content/insights/` with frontmatter:
+
+```yaml
+title:
+publishedAt: YYYY-MM-DD
+category: ERP | SAP Business One | ...
+excerpt:
+originalUrl:
 ```
 
-Your application will be available at `http://localhost:5173`.
+Re-run `npm run build` so prerender picks up new slugs (also listed in `react-router.config.ts` via `getInsightSlugs()`).
 
-## Building for Production
+## Deploy (Vercel)
 
-Create a production build:
+- Framework: Vite / React Router
+- Output: React Router server + prerendered `build/client`
+- Canonical host: `https://www.axleta.com`
+- Redirects: see `vercel.json` (`/about-axleta`, `/contact-axleta`)
 
-```bash
-npm run build
-```
+## Blogger cutover
 
-## Deployment
+After launch, configure **blog.axleta.com** redirects to matching `/insights/:slug` URLs in Blogger settings (not in this repo).
 
-### Docker Deployment
+## Images
 
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+See [IMAGE_BRIEF.md](./IMAGE_BRIEF.md). Hero uses inline SVG; optional page photos are generated on demand.

@@ -1,0 +1,16 @@
+{
+  "name": "Axleta",
+  "short_name": "Axleta",
+  "description": "Technology and business advancement for SMEs",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F6F7",
+  "theme_color": "#131E29",
+  "icons": [
+    {
+      "src": "/brand/apple-touch-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
