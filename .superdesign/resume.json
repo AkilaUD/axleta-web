@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "targets": {
+    "/": {
+      "targetKind": "existing-ui",
+      "projectId": "7c5a229e-40b6-43f6-8fe3-c2afe45da5bf",
+      "baselineDraftId": "7e7c47fc-d934-43cd-8688-f2f459bc1c96",
+      "activeDraftId": "7e7c47fc-d934-43cd-8688-f2f459bc1c96",
+      "designSystemPath": ".superdesign/design-system.md",
+      "referenceIds": [
+        "aa422c80-7963-466b-9e90-d742a5f30e86",
+        "public-images-logo.png"
+      ],
+      "brandAssets": {
+        "logo": {
+          "assetKey": "public-images-logo.png",
+          "url": "https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/7c5a229e-40b6-43f6-8fe3-c2afe45da5bf/brand-assets/public-images-logo.png/logo.png",
+          "sourcePath": "public/images/logo.png"
+        }
+      },
+      "contextFiles": [
+        ".superdesign/design-system.md",
+        ".superdesign/init/theme.md",
+        "app/routes/home.tsx",
+        "app/components/sections/Hero.tsx",
+        "app/components/layout/SiteHeader.tsx",
+        "app/components/layout/SiteFooter.tsx",
+        "app/components/ui/MagneticButton.tsx",
+        "app/components/ui/Button.tsx",
+        "app/components/sections/CtaBlock.tsx"
+      ],
+      "fingerprints": {
+        ".superdesign/design-system.md": "10285680f1d474209c0102de531f5fcb1e4128762d8df85255e2fca9c4de6ff1",
+        ".superdesign/init/theme.md": "33f7250ef9acdd05a7347f9bd5f3bb07de437c8fae5c4e0d0c5b1399ee4419cf",
+        "app/routes/home.tsx": "c57da0e7f5cf86c23027639ce7926518dd8a768dc6e5f7a4ae2d726ec105c79e",
+        "app/components/sections/Hero.tsx": "a3f9a36736dd952e2d9dba2b763eb184d5f40767bdc0c98ef93981ce1ec71c3e",
+        "app/components/layout/SiteHeader.tsx": "5dae1987e916cd897be8db875e595853c2e15bce2f4be864f12c878f1452d68a",
+        "app/components/layout/SiteFooter.tsx": "fc6c41967bc7a6cff7570d0da32e441c145ad59021ea1a9f844db01f7612e7d1",
+        "app/components/ui/MagneticButton.tsx": "83c3ba3f9666c656a632642bea1f30cd03dd82f78b6539cffe09f59379689823",
+        "app/components/ui/Button.tsx": "22da19004e9f5ef8563bbb07e6007865568fd0560edf09582a617e2e5385d4ff",
+        "app/components/sections/CtaBlock.tsx": "3c9a7193b7a77d77fa6e20d1ba7722bfa58fa597b14f990ec295e26c8d9b06f2"
+      },
+      "components": [
+        {
+          "name": "SiteHeader",
+          "id": "e30d61db-5960-4871-b830-dc1ed42c81ac",
+          "sourcePath": "app/components/layout/SiteHeader.tsx",
+          "logoAssetKey": "public-images-logo.png"
+        },
+        {
+          "name": "SiteFooter",
+          "id": "f516c89b-2032-4403-ad42-fe2546edcc42",
+          "sourcePath": "app/components/layout/SiteFooter.tsx",
+          "logoAssetKey": "public-images-logo.png"
+        }
+      ],
+      "drafts": {
+        "7e7c47fc-d934-43cd-8688-f2f459bc1c96": {
+          "title": "Current Home (baseline)",
+          "visualDirection": "pixel-perfect reproduction",
+          "currentVersion": 1
+        },
+        "304d85f7-b6cf-4cf5-8e88-d8095c04007e": {
+          "title": "Industrial-Editorial Experience",
+          "visualDirection": "award elevation craft",
+          "parentDraftId": "7e7c47fc-d934-43cd-8688-f2f459bc1c96",
+          "currentVersion": 1
+        },
+        "29b38921-41cf-4a9b-8386-b108d5d63000": {
+          "title": "Systems Theater",
+          "visualDirection": "globe-as-narrative spine",
+          "parentDraftId": "7e7c47fc-d934-43cd-8688-f2f459bc1c96",
+          "currentVersion": 1
+        }
+      },
+      "updatedAt": "2026-11-03T05:53:21.616Z"
+    }
+  }
+}

@@ -1,7 +1,5 @@
 import type { Route } from "./+types/solutions.add-ons-integrations";
-import { LinkButton } from "~/components/ui/Button";
-import { Container } from "~/components/ui/Container";
-import { PageHero } from "~/components/ui/PageHero";
+import { SolutionDetail } from "~/components/sections/SolutionDetail";
 import { addons } from "~/data/solutions";
 import { pageMeta } from "~/lib/meta";
 
@@ -16,58 +14,58 @@ export function meta(): Route.MetaDescriptors {
 
 export default function AddonsPage() {
   return (
-    <main id="main">
-      <PageHero
-        crumbs={[
-          { label: "Home", href: "/" },
-          { label: "Solutions", href: "/solutions" },
-          {
-            label: "Add-ons & integrations",
-            href: "/solutions/add-ons-integrations",
-          },
-        ]}
-        eyebrow="Integrations"
-        title="ERP add-ons & integrations"
-        description="These offerings match Axleta's published materials. Availability and scope are confirmed for each engagement."
-      />
-      <Container className="py-12 md:py-16">
-        <div className="space-y-0">
-          {addons.map((addon, i) => (
-            <article
-              key={addon.id}
-              className="grid gap-4 border-t border-subtle py-10 last:border-b lg:grid-cols-[4rem_1fr]"
-            >
-              <span className="text-2xl font-bold text-[var(--color-brand)]">
+    <SolutionDetail
+      crumbs={[
+        { label: "Home", href: "/" },
+        { label: "Solutions", href: "/solutions" },
+        {
+          label: "Add-ons & integrations",
+          href: "/solutions/add-ons-integrations",
+        },
+      ]}
+      eyebrow="Fig. — Integrations"
+      title="ERP add-ons & integrations"
+      description="Companion applications that extend and connect your ERP core. Availability and scope are confirmed for each engagement."
+      intro={[
+        "These offerings match Axleta’s published materials. Each connects a specific operational situation back to the ERP instead of living as a side system.",
+      ]}
+      ctaLabel="Discuss add-ons"
+      ctaTo="/contact?interest=add-ons"
+    >
+      <ul className="divide-y divide-[color-mix(in_srgb,var(--color-steel)_30%,transparent)] border-y border-[color-mix(in_srgb,var(--color-steel)_30%,transparent)]">
+        {addons.map((addon, i) => (
+          <li key={addon.id} className="py-8">
+            <div className="grid gap-3 md:grid-cols-[4rem_1fr]">
+              <span className="text-label text-oxide">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <div>
-                <h2 className="text-h2">{addon.name}</h2>
-                <dl className="mt-6 grid gap-6 text-sm md:grid-cols-2">
+                <h2 className="font-display text-xl font-semibold tracking-[-0.03em]">
+                  {addon.name}
+                </h2>
+                <dl className="mt-5 grid gap-5 text-sm md:grid-cols-2">
                   <div>
-                    <dt className="text-eyebrow mb-2">Situation</dt>
-                    <dd className="text-muted">{addon.situation}</dd>
+                    <dt className="text-label mb-1.5 text-oxide">Situation</dt>
+                    <dd className="text-ink/70">{addon.situation}</dd>
                   </div>
                   <div>
-                    <dt className="text-eyebrow mb-2">What it does</dt>
-                    <dd className="text-muted">{addon.solution}</dd>
+                    <dt className="text-label mb-1.5 text-oxide">What it does</dt>
+                    <dd className="text-ink/70">{addon.solution}</dd>
                   </div>
                   <div>
-                    <dt className="text-eyebrow mb-2">ERP connection</dt>
-                    <dd className="text-muted">{addon.connection}</dd>
+                    <dt className="text-label mb-1.5 text-oxide">ERP connection</dt>
+                    <dd className="text-ink/70">{addon.connection}</dd>
                   </div>
                   <div>
-                    <dt className="text-eyebrow mb-2">Benefit</dt>
-                    <dd className="text-muted">{addon.benefit}</dd>
+                    <dt className="text-label mb-1.5 text-oxide">Benefit</dt>
+                    <dd className="text-ink/70">{addon.benefit}</dd>
                   </div>
                 </dl>
               </div>
-            </article>
-          ))}
-        </div>
-        <LinkButton to="/contact?interest=add-ons" variant="primary" className="my-12">
-          Discuss add-ons
-        </LinkButton>
-      </Container>
-    </main>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </SolutionDetail>
   );
 }

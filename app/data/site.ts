@@ -1,6 +1,6 @@
 export const site = {
   name: "Axleta",
-  tagline: "Technology & Business Advancement",
+  tagline: "An Axle to the Technology and Advancement",
   positioning:
     "The right technology. Better-connected operations. Meaningful business progress.",
   foundedYear: 2018,

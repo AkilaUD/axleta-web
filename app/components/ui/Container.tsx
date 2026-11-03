@@ -15,7 +15,9 @@ export function Container({
 }: ContainerProps) {
   return (
     <Tag
-      className={`mx-auto w-full px-[clamp(1.25rem,4vw,2.5rem)] ${narrow ? "max-w-[42rem]" : "max-w-[76rem]"} ${className}`}
+      className={`mx-auto w-full px-[clamp(1.25rem,4vw,2.5rem)] ${
+        narrow ? "max-w-[48rem]" : "max-w-[90rem]"
+      } ${className}`}
     >
       {children}
     </Tag>

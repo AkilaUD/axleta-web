@@ -1,21 +1,18 @@
-import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router";
 import type { NavItem } from "~/data/navigation";
 import { useLockBodyScroll } from "~/hooks/useLockBodyScroll";
-import { LinkButton } from "~/components/ui/Button";
+import { MagneticButton } from "~/components/ui/MagneticButton";
 
 type MobileNavProps = {
   items: NavItem[];
-  tone?: "light" | "dark";
 };
 
-export function MobileNav({ items, tone = "dark" }: MobileNavProps) {
+export function MobileNav({ items }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   useLockBodyScroll(open);
   const location = useLocation();
-  const light = tone === "light";
 
   return (
     <div className="lg:hidden">
@@ -23,89 +20,62 @@ export function MobileNav({ items, tone = "dark" }: MobileNavProps) {
         type="button"
         aria-expanded={open}
         aria-controls="mobile-nav"
-        className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded-[var(--radius-button)] border ${
-          light
-            ? "border-white/30 bg-white/10 text-white"
-            : "border-subtle bg-surface text-text"
-        }`}
+        className="text-label inline-flex min-h-11 min-w-11 items-center justify-center border border-current/30 px-3"
         onClick={() => setOpen(true)}
       >
-        <Menu className="size-5" aria-hidden />
-        <span className="sr-only">Open menu</span>
+        Menu
       </button>
       <AnimatePresence>
         {open ? (
-          <>
-            <motion.button
-              type="button"
-              aria-label="Close menu"
-              className="fixed inset-0 z-40 bg-black/40"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setOpen(false)}
-            />
-            <motion.nav
-              id="mobile-nav"
-              className="fixed inset-y-0 right-0 z-50 flex w-[min(100%,20rem)] flex-col bg-surface shadow-xl"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ duration: 0.25 }}
-            >
-              <div className="flex items-center justify-between border-b border-subtle p-4">
-                <span className="text-h3">Menu</span>
-                <button
-                  type="button"
-                  className="inline-flex min-h-11 min-w-11 items-center justify-center"
-                  onClick={() => setOpen(false)}
+          <motion.nav
+            id="mobile-nav"
+            className="fixed inset-0 z-50 flex flex-col bg-ink text-paper"
+            initial={{ clipPath: "inset(0 0 100% 0)" }}
+            animate={{ clipPath: "inset(0)" }}
+            exit={{ clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: 0.45, ease: [0.76, 0, 0.24, 1] }}
+          >
+            <div className="flex items-center justify-between px-5 pt-6">
+              <span className="text-label text-steel">Navigation</span>
+              <button
+                type="button"
+                className="text-label min-h-11 px-2"
+                onClick={() => setOpen(false)}
+              >
+                Close ✕
+              </button>
+            </div>
+            <ul className="flex flex-1 flex-col justify-center px-5">
+              {items.map((item, i) => (
+                <motion.li
+                  key={item.label}
+                  initial={{ y: 40, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.05 + i * 0.04, duration: 0.4 }}
+                  className="border-b border-[color-mix(in_srgb,var(--color-steel)_25%,transparent)]"
                 >
-                  <X className="size-5" aria-hidden />
-                  <span className="sr-only">Close</span>
-                </button>
-              </div>
-              <ul className="flex-1 overflow-y-auto p-4">
-                {items.map((item) => (
-                  <li key={item.label} className="border-b border-subtle py-2">
-                    <Link
-                      to={item.href}
-                      className="block py-2 font-medium text-text"
-                      onClick={() => setOpen(false)}
-                      aria-current={
-                        location.pathname === item.href ? "page" : undefined
-                      }
-                    >
-                      {item.label}
-                    </Link>
-                    {item.children ? (
-                      <ul className="mb-2 ml-3 border-l border-subtle pl-3">
-                        {item.children.map((child) => (
-                          <li key={child.href}>
-                            <Link
-                              to={child.href}
-                              className="block py-2 text-sm text-muted"
-                              onClick={() => setOpen(false)}
-                            >
-                              {child.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
-              <div className="border-t border-subtle p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
-                <LinkButton
-                  to="/contact?interest=general"
-                  variant="primary"
-                  className="w-full"
-                >
-                  Discuss a requirement
-                </LinkButton>
-              </div>
-            </motion.nav>
-          </>
+                  <Link
+                    to={item.href}
+                    className="font-display block py-3 text-[12vw] leading-[0.9] font-semibold tracking-[-0.04em]"
+                    onClick={() => setOpen(false)}
+                    aria-current={
+                      location.pathname === item.href ? "page" : undefined
+                    }
+                  >
+                    {item.label}
+                  </Link>
+                </motion.li>
+              ))}
+            </ul>
+            <div className="px-5 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+              <MagneticButton
+                to="/contact?interest=general"
+                className="w-full"
+              >
+                Talk to Axleta
+              </MagneticButton>
+            </div>
+          </motion.nav>
         ) : null}
       </AnimatePresence>
     </div>

@@ -5,6 +5,8 @@ import type { Route } from "./+types/insights.$slug";
 import { PageHero } from "~/components/ui/PageHero";
 import { Container } from "~/components/ui/Container";
 import { Prose } from "~/components/ui/Prose";
+import { CtaBlock } from "~/components/sections/CtaBlock";
+import { ReadingProgress } from "~/components/layout/ReadingProgress";
 import { JsonLd } from "~/components/seo/JsonLd";
 import {
   getAllInsights,
@@ -49,6 +51,7 @@ export default function InsightArticle({ loaderData }: Route.ComponentProps) {
 
   return (
     <main id="main">
+      <ReadingProgress />
       <JsonLd
         data={[
           articleJsonLd({
@@ -72,15 +75,16 @@ export default function InsightArticle({ loaderData }: Route.ComponentProps) {
         eyebrow={post.category}
         title={post.title}
         description={`${post.publishedAt} · ${post.readingMinutes} min read`}
+        tone="paper"
       />
       <Container narrow className="py-16">
         <Prose large>
           <Markdown remarkPlugins={[remarkGfm]}>{post.content}</Markdown>
         </Prose>
-        <div className="mt-10 flex flex-wrap gap-4 border-t border-subtle pt-8 text-sm">
+        <div className="mt-10 flex flex-wrap gap-5 border-t border-[color-mix(in_srgb,var(--color-steel)_30%,transparent)] pt-8">
           <button
             type="button"
-            className="text-[var(--color-brand-hover)] hover:underline"
+            className="text-label text-oxide link-draw"
             onClick={() => navigator.clipboard?.writeText(shareUrl)}
           >
             Copy link
@@ -89,28 +93,34 @@ export default function InsightArticle({ loaderData }: Route.ComponentProps) {
             href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
             rel="noopener noreferrer"
             target="_blank"
-            className="text-[var(--color-brand-hover)] hover:underline"
+            className="text-label text-oxide link-draw"
           >
             Share on LinkedIn
           </a>
           <a
             href={`mailto:?subject=${encodeURIComponent(post.title)}&body=${encodeURIComponent(shareUrl)}`}
-            className="text-[var(--color-brand-hover)] hover:underline"
+            className="text-label text-oxide link-draw"
           >
             Email
           </a>
         </div>
         {related.length > 0 ? (
-          <section className="mt-12">
-            <h2 className="text-h2">Related</h2>
-            <ul className="mt-4 space-y-2">
+          <section className="mt-16">
+            <p className="text-label text-oxide">Related</p>
+            <ul className="mt-4 divide-y divide-[color-mix(in_srgb,var(--color-steel)_30%,transparent)] border-y border-[color-mix(in_srgb,var(--color-steel)_30%,transparent)]">
               {related.map((r) => (
                 <li key={r.slug}>
                   <Link
                     to={`/insights/${r.slug}`}
-                    className="text-[var(--color-brand-hover)] hover:underline"
+                    className="group flex items-baseline justify-between gap-4 py-5"
+                    data-cursor="OPEN"
                   >
-                    {r.title}
+                    <span className="font-display text-lg font-semibold tracking-[-0.02em] group-hover:text-oxide">
+                      {r.title}
+                    </span>
+                    <span className="text-label shrink-0 text-steel group-hover:text-oxide">
+                      →
+                    </span>
                   </Link>
                 </li>
               ))}
@@ -118,6 +128,7 @@ export default function InsightArticle({ loaderData }: Route.ComponentProps) {
           </section>
         ) : null}
       </Container>
+      <CtaBlock />
     </main>
   );
 }

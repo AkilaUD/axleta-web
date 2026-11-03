@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import type { Route } from "./+types/services";
 import { LinkButton } from "~/components/ui/Button";
-import { Container } from "~/components/ui/Container";
 import { PageHero } from "~/components/ui/PageHero";
+import { CtaBlock } from "~/components/sections/CtaBlock";
 import { serviceSections } from "~/data/services";
 import { pageMeta } from "~/lib/meta";
 
@@ -44,74 +44,71 @@ export default function ServicesPage() {
           { label: "Home", href: "/" },
           { label: "Services", href: "/services" },
         ]}
-        eyebrow="Services"
-        title="Services"
+        eyebrow="Fig. — Services"
+        title="Services scoped to how you operate"
         description="Interactive services scoped to your requirements—we analyze needs before recommending solutions."
       />
-      <Container className="grid gap-12 py-12 lg:grid-cols-[14rem_1fr] lg:py-16">
-        <div>
-          <nav
-            aria-label="On this page"
-            className="sticky top-24 hidden lg:block"
-          >
-            <p className="text-eyebrow mb-3">On this page</p>
-            <ul className="space-y-2 text-sm">
-              {serviceSections.map((s) => (
+
+      <section className="bg-paper py-16 text-ink md:py-24">
+        <div className="mx-auto grid max-w-[90rem] gap-12 px-[clamp(1.25rem,4vw,2.5rem)] lg:grid-cols-[14rem_1fr]">
+          <nav aria-label="On this page" className="lg:sticky lg:top-28 lg:self-start">
+            <p className="text-label mb-4 text-steel">On this page</p>
+            <ul className="space-y-3">
+              {serviceSections.map((s, i) => (
                 <li key={s.id}>
                   <a
                     href={`#${s.id}`}
-                    className={
+                    className={`text-label block transition-colors ${
                       active === s.id
-                        ? "font-semibold text-[var(--color-brand-hover)]"
-                        : "text-muted hover:text-text"
-                    }
+                        ? "text-oxide"
+                        : "text-steel hover:text-ink"
+                    }`}
                   >
-                    {s.title}
+                    {String(i + 1).padStart(2, "0")} — {s.title}
                   </a>
                 </li>
               ))}
             </ul>
           </nav>
-          <ul className="mt-6 space-y-2 text-sm lg:hidden">
-            {serviceSections.map((s) => (
-              <li key={s.id}>
-                <a
-                  href={`#${s.id}`}
-                  className="text-[var(--color-brand-hover)] underline"
-                >
-                  {s.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <div className="space-y-16">
-            {serviceSections.map((section) => (
+
+          <div className="space-y-0">
+            {serviceSections.map((section, i) => (
               <section
                 key={section.id}
                 id={section.id}
-                className="scroll-mt-24 border-t border-subtle pt-10 first:border-0 first:pt-0"
+                className="scroll-mt-28 border-t border-[color-mix(in_srgb,var(--color-steel)_30%,transparent)] py-12 first:border-t-0 first:pt-0"
               >
-                <h2 className="text-h2">{section.title}</h2>
-                <p className="mt-3 text-body-lg text-muted">{section.summary}</p>
-                <ul className="mt-4 list-disc space-y-2 pl-5 text-muted">
+                <p className="text-label text-oxide">
+                  {String(i + 1).padStart(2, "0")}
+                </p>
+                <h2 className="mt-3 font-display text-[clamp(1.75rem,3vw,2.75rem)] font-semibold tracking-[-0.03em]">
+                  {section.title}
+                </h2>
+                <p className="mt-4 max-w-2xl text-lg text-ink/70">
+                  {section.summary}
+                </p>
+                <ul className="mt-6 max-w-xl space-y-3">
                   {section.bullets.map((b) => (
-                    <li key={b}>{b}</li>
+                    <li
+                      key={b}
+                      className="border-l border-oxide pl-4 text-ink/75"
+                    >
+                      {b}
+                    </li>
                   ))}
                 </ul>
               </section>
             ))}
+            <div className="pt-8">
+              <LinkButton to="/contact?interest=consulting" variant="primary">
+                Talk through a service need
+              </LinkButton>
+            </div>
           </div>
-          <LinkButton
-            to="/contact?interest=consulting"
-            variant="primary"
-            className="mt-12"
-          >
-            Discuss services
-          </LinkButton>
         </div>
-      </Container>
+      </section>
+
+      <CtaBlock />
     </main>
   );
 }

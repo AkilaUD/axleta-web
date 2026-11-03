@@ -47,7 +47,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
           <p className="mt-4 text-muted">
             The page you requested is not available.
           </p>
-          <a href="/" className="mt-6 inline-block text-[var(--color-brand-hover)] underline">
+          <a href="/" className="mt-6 inline-block text-oxide underline">
             Return home
           </a>
         </div>

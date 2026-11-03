@@ -1,62 +1,87 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router";
-import { motion } from "motion/react";
+import { Link } from "react-router";
 import { primaryNav } from "~/data/navigation";
-import { site } from "~/data/site";
-import { BrandMark } from "~/components/ui/BrandMark";
-import { Container } from "~/components/ui/Container";
+import { Logo } from "~/components/svg/Logo";
 import { DesktopNav } from "~/components/layout/DesktopNav";
 import { MobileNav } from "~/components/layout/MobileNav";
-import { usePrefersReducedMotion } from "~/hooks/usePrefersReducedMotion";
+import { MegaMenu } from "~/components/layout/MegaMenu";
+import { useLockBodyScroll } from "~/hooks/useLockBodyScroll";
+import type { MegaSchematicId } from "~/components/svg/schematics/MegaPreviews";
 
 export function SiteHeader() {
-  const [scrolled, setScrolled] = useState(false);
-  const reduced = usePrefersReducedMotion();
-  const location = useLocation();
-  const isHome = location.pathname === "/";
-  const overHero = isHome && !scrolled;
+  const [megaKind, setMegaKind] = useState<"solutions" | "services" | null>(
+    null,
+  );
+  const [activeId, setActiveId] = useState<MegaSchematicId>("erp");
+  const megaOpen = megaKind !== null;
+  useLockBodyScroll(megaOpen);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMegaKind(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  function toggleMega(kind: "solutions" | "services") {
+    setMegaKind((current) => (current === kind ? null : kind));
+  }
+
   return (
-    <motion.header
-      className={`z-30 border-b backdrop-blur transition-[background-color,box-shadow,color] ${
-        isHome ? "fixed inset-x-0 top-0" : "sticky top-0"
-      } ${
-        overHero
-          ? "border-transparent bg-transparent text-white"
-          : "border-subtle bg-surface/94 text-text shadow-[0_8px_30px_color-mix(in_srgb,#131e29_8%,transparent)]"
-      }`}
-      animate={
-        reduced
-          ? undefined
-          : {
-              paddingTop: scrolled ? 0 : 2,
-              paddingBottom: scrolled ? 0 : 2,
-            }
-      }
-      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <Container className="flex min-h-[4.25rem] items-center justify-between gap-4">
-        <Link
-          to="/"
-          className={`flex items-center gap-3 ${overHero ? "text-white" : "text-text"}`}
-        >
-          <BrandMark
-            className={`h-8 w-8 shrink-0 ${overHero ? "text-white" : "text-[var(--color-brand)]"}`}
-          />
-          <span className="font-[family-name:var(--font-heading)] text-[1.05rem] font-bold tracking-tight">
-            {site.name}
-          </span>
-        </Link>
-        <DesktopNav items={primaryNav} tone={overHero ? "light" : "dark"} />
-        <MobileNav items={primaryNav} tone={overHero ? "light" : "dark"} />
-      </Container>
-    </motion.header>
+    <>
+      <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
+        {/* Keeps logo clear of pinned section titles underneath */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[linear-gradient(180deg,color-mix(in_srgb,var(--color-ink)_92%,transparent)_0%,color-mix(in_srgb,var(--color-ink)_55%,transparent)_55%,transparent_100%)]"
+          aria-hidden
+        />
+        <div className="relative mx-auto flex min-h-[4.5rem] max-w-[90rem] items-center justify-between gap-4 px-[clamp(1.25rem,4vw,2.5rem)]">
+          {/* Logo stays outside mix-blend so cyan artwork is preserved */}
+          <Link
+            to="/"
+            onClick={() => setMegaKind(null)}
+            aria-label="Axleta home"
+            className="pointer-events-auto relative z-[1] shrink-0 rounded-sm bg-ink/80 px-1.5 py-1 backdrop-blur-sm"
+          >
+            <Logo variant="nav" />
+          </Link>
+
+          <div className="pointer-events-auto flex items-center gap-2">
+            <div className="mix-blend-difference text-paper">
+              <DesktopNav
+                items={primaryNav}
+                megaOpen={megaOpen}
+                megaKind={megaKind}
+                onToggleMega={toggleMega}
+                onCloseMega={() => setMegaKind(null)}
+                linksOnly
+              />
+            </div>
+            <div className="hidden lg:block">
+              <DesktopNav
+                items={primaryNav}
+                megaOpen={megaOpen}
+                megaKind={megaKind}
+                onToggleMega={toggleMega}
+                onCloseMega={() => setMegaKind(null)}
+                ctaOnly
+              />
+            </div>
+            <div className="mix-blend-difference text-paper lg:hidden">
+              <MobileNav items={primaryNav} />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <MegaMenu
+        open={megaOpen}
+        kind={megaKind}
+        activeId={activeId}
+        onActiveId={setActiveId}
+        onClose={() => setMegaKind(null)}
+      />
+    </>
   );
 }

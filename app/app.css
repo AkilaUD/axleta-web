@@ -1,71 +1,113 @@
 @import "tailwindcss";
-@import "@fontsource/inter/400.css";
-@import "@fontsource/inter/500.css";
-@import "@fontsource/inter/600.css";
-@import "@fontsource/inter/700.css";
-@import "@fontsource/inter-tight/600.css";
-@import "@fontsource/inter-tight/700.css";
+@import "lenis/dist/lenis.css";
+@import "@fontsource/inter-tight/latin-400.css";
+@import "@fontsource/inter-tight/latin-500.css";
+@import "@fontsource/inter-tight/latin-600.css";
+@import "@fontsource/inter-tight/latin-700.css";
+@import "@fontsource/instrument-serif/latin-400.css";
+@import "@fontsource/instrument-serif/latin-400-italic.css";
+@import "@fontsource/jetbrains-mono/latin-400.css";
+@import "@fontsource/jetbrains-mono/latin-500.css";
 
 @theme {
-  --color-text: #131e29;
-  --color-text-muted: #556b82;
-  --color-surface: #ffffff;
-  --color-background: #f5f6f7;
-  --color-border: #d5dadd;
-  --color-brand: #0070f2;
-  --color-brand-hover: #0057d2;
-  --color-brand-soft: #ebf8ff;
-  --color-accent-warm: #e38b16;
-  --color-shell: #1d2d3e;
-  --color-shell-deep: #0a141d;
-  --color-negative: #bb0000;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Inter Tight", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --radius-button: 0.5rem;
-  --radius-card: 0.75rem;
+  /* SAP Horizon–inspired cool industrial palette */
+  --color-paper: #eef2f6;
+  --color-paper-2: #e2e8f0;
+  --color-ink: #0a1628;
+  --color-graphite: #12253d;
+  --color-steel: #7b8ba0;
+  --color-oxide: #0070f2; /* SAP blue accent */
+  --color-oxide-dim: #0057d2;
+  --color-signal: #c8f542; /* lime highlight (hero accent / status) */
+
+  /* Legacy aliases — keep intermediate pages readable during redesign */
+  --color-text: var(--color-ink);
+  --color-text-muted: color-mix(in srgb, var(--color-ink) 70%, transparent);
+  --color-surface: var(--color-paper);
+  --color-background: var(--color-paper);
+  --color-border: color-mix(in srgb, var(--color-steel) 35%, transparent);
+  --color-brand: var(--color-oxide);
+  --color-brand-hover: var(--color-oxide-dim);
+  --color-brand-soft: color-mix(in srgb, var(--color-oxide) 12%, var(--color-paper));
+  --color-accent-warm: var(--color-oxide);
+  --color-shell: var(--color-graphite);
+  --color-shell-deep: var(--color-ink);
+  --color-negative: var(--color-oxide-dim);
+
+  --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --radius-button: 9999px;
+  --radius-card: 0;
+  --radius-none: 0;
 }
 
 @layer base {
   html {
-    scroll-behavior: smooth;
     scroll-padding-top: 5rem;
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-oxide);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-oxide) 28%, var(--color-paper));
+    color: var(--color-ink);
   }
 
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
     }
-
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-    }
   }
+}
 
-  body {
-    @apply bg-background text-text font-sans antialiased;
-    font-size: 1rem;
-    line-height: 1.65;
-  }
+@utility bg-paper {
+  background-color: var(--color-paper);
+}
 
-  @media (min-width: 1024px) {
-    body {
-      font-size: 1.0625rem;
-    }
-  }
+@utility bg-paper-2 {
+  background-color: var(--color-paper-2);
+}
 
-  :focus-visible {
-    outline: 2px solid var(--color-brand);
-    outline-offset: 2px;
-  }
+@utility bg-ink {
+  background-color: var(--color-ink);
+}
 
-  ::selection {
-    background: color-mix(in srgb, var(--color-brand) 28%, white);
-    color: var(--color-text);
-  }
+@utility bg-graphite {
+  background-color: var(--color-graphite);
+}
+
+@utility bg-oxide {
+  background-color: var(--color-oxide);
 }
 
 @utility bg-background {
@@ -76,6 +118,22 @@
   background-color: var(--color-surface);
 }
 
+@utility text-ink {
+  color: var(--color-ink);
+}
+
+@utility text-paper {
+  color: var(--color-paper);
+}
+
+@utility text-steel {
+  color: var(--color-steel);
+}
+
+@utility text-oxide {
+  color: var(--color-oxide);
+}
+
 @utility text-text {
   color: var(--color-text);
 }
@@ -84,32 +142,47 @@
   color: var(--color-text-muted);
 }
 
+@utility font-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.88;
+}
+
+@utility font-serif {
+  font-family: var(--font-serif);
+}
+
+@utility font-mono {
+  font-family: var(--font-mono);
+}
+
 @utility text-display {
-  font-family: var(--font-heading);
+  font-family: var(--font-display);
   font-size: clamp(2.5rem, 5.5vw + 0.4rem, 4.75rem);
   font-weight: 700;
-  line-height: 1.02;
+  line-height: 0.92;
   letter-spacing: -0.04em;
 }
 
 @utility text-h1 {
-  font-family: var(--font-heading);
+  font-family: var(--font-display);
   font-size: clamp(1.95rem, 2.9vw + 0.55rem, 3rem);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.05;
   letter-spacing: -0.032em;
 }
 
 @utility text-h2 {
-  font-family: var(--font-heading);
+  font-family: var(--font-display);
   font-size: clamp(1.45rem, 1.7vw + 0.65rem, 1.95rem);
   font-weight: 700;
-  line-height: 1.18;
+  line-height: 1.12;
   letter-spacing: -0.022em;
 }
 
 @utility text-h3 {
-  font-family: var(--font-heading);
+  font-family: var(--font-display);
   font-size: 1.125rem;
   font-weight: 600;
   line-height: 1.35;
@@ -117,7 +190,7 @@
 
 @utility text-body-lg {
   font-size: 1.125rem;
-  line-height: 1.6;
+  line-height: 1.55;
 }
 
 @utility text-small {
@@ -125,40 +198,119 @@
   line-height: 1.5;
 }
 
-@utility text-eyebrow {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+@utility text-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--color-brand);
+}
+
+@utility text-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-oxide);
+}
+
+@utility border-hairline {
+  border-color: color-mix(in srgb, var(--color-steel) 30%, transparent);
 }
 
 @utility border-subtle {
-  border-color: color-mix(in srgb, var(--color-border) 90%, transparent);
+  border-color: color-mix(in srgb, var(--color-steel) 30%, transparent);
+}
+
+/* Fine tiled grain. A bitmap keeps the screen/multiply look without an SVG turbulence filter. */
+.grain {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.08;
+  background-image: url("/images/grain.webp");
+  background-repeat: repeat;
+  background-size: 220px 220px;
+}
+
+.grain--paper {
+  opacity: 0.07;
+  mix-blend-mode: multiply;
+}
+
+.grain--ink {
+  opacity: 0.09;
+  mix-blend-mode: screen;
+}
+
+/* 12-column engineering grid — toggle with G */
+.site-grid {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: none;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0;
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
+  max-width: 90rem;
+  margin-inline: auto;
+  left: 0;
+  right: 0;
+}
+
+.site-grid.is-visible {
+  display: grid;
+}
+
+.site-grid span {
+  border-left: 1px solid color-mix(in srgb, var(--color-oxide) 22%, transparent);
+  height: 100%;
+}
+
+.site-grid span:last-child {
+  border-right: 1px solid color-mix(in srgb, var(--color-oxide) 22%, transparent);
+}
+
+.hairline {
+  border-color: color-mix(in srgb, var(--color-steel) 30%, transparent);
+}
+
+.link-draw {
+  background-image: linear-gradient(var(--color-oxide), var(--color-oxide));
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.link-draw:hover {
+  background-size: 100% 1px;
 }
 
 .photo-scrim {
   background: linear-gradient(
     108deg,
-    color-mix(in srgb, var(--color-shell-deep) 90%, transparent) 0%,
-    color-mix(in srgb, var(--color-shell) 74%, transparent) 42%,
-    color-mix(in srgb, var(--color-shell) 28%, transparent) 100%
+    color-mix(in srgb, var(--color-ink) 90%, transparent) 0%,
+    color-mix(in srgb, var(--color-graphite) 74%, transparent) 42%,
+    color-mix(in srgb, var(--color-graphite) 28%, transparent) 100%
   );
 }
 
-/* Cinematic hero: keep photo dominant; ink pools at the type baseline */
 .hero-scrim {
   background:
     linear-gradient(
       180deg,
-      color-mix(in srgb, var(--color-shell-deep) 45%, transparent) 0%,
+      color-mix(in srgb, var(--color-ink) 45%, transparent) 0%,
       transparent 28%,
-      color-mix(in srgb, var(--color-shell-deep) 55%, transparent) 62%,
-      color-mix(in srgb, var(--color-shell-deep) 88%, transparent) 100%
+      color-mix(in srgb, var(--color-ink) 55%, transparent) 62%,
+      color-mix(in srgb, var(--color-ink) 88%, transparent) 100%
     ),
     linear-gradient(
       90deg,
-      color-mix(in srgb, var(--color-shell-deep) 70%, transparent) 0%,
+      color-mix(in srgb, var(--color-ink) 70%, transparent) 0%,
       transparent 55%
     );
 }
@@ -167,24 +319,17 @@
   min-height: 100svh;
 }
 
-.noise {
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
-  background-size: 180px 180px;
-  mix-blend-mode: soft-light;
-}
-
 .mesh-soft {
   pointer-events: none;
   background:
     radial-gradient(
       900px 420px at 8% -10%,
-      color-mix(in srgb, var(--color-brand) 10%, transparent),
+      color-mix(in srgb, var(--color-oxide) 8%, transparent),
       transparent 60%
     ),
     radial-gradient(
       700px 360px at 92% 110%,
-      color-mix(in srgb, var(--color-brand) 8%, transparent),
+      color-mix(in srgb, var(--color-oxide) 6%, transparent),
       transparent 55%
     );
 }
@@ -196,7 +341,7 @@
   top: 0;
   bottom: 0;
   width: 0;
-  background: var(--color-brand);
+  background: var(--color-oxide);
   transition: width 280ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -205,15 +350,9 @@
 }
 
 .product-window {
-  border-radius: var(--radius-card);
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, #fff 18%, transparent);
-  background: #0f1c28;
-  box-shadow:
-    0 28px 70px color-mix(in srgb, #000 48%, transparent),
-    0 0 0 1px color-mix(in srgb, var(--color-brand) 28%, transparent),
-    0 0 60px color-mix(in srgb, var(--color-brand) 18%, transparent);
-  will-change: transform;
+  border: 1px solid color-mix(in srgb, var(--color-paper) 18%, transparent);
+  background: var(--color-graphite);
 }
 
 .product-window__chrome {
@@ -221,41 +360,33 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.65rem 0.85rem;
-  background: color-mix(in srgb, #121f2b 92%, #0070f2);
-  border-bottom: 1px solid color-mix(in srgb, #fff 8%, transparent);
+  background: color-mix(in srgb, var(--color-ink) 92%, var(--color-oxide));
+  border-bottom: 1px solid color-mix(in srgb, var(--color-paper) 8%, transparent);
 }
 
 .product-window__dot {
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 999px;
-  background: color-mix(in srgb, #fff 25%, transparent);
-}
-
-.product-window__dot:nth-child(1) {
-  background: #ff5f57;
-}
-.product-window__dot:nth-child(2) {
-  background: #febc2e;
-}
-.product-window__dot:nth-child(3) {
-  background: #28c840;
+  background: color-mix(in srgb, var(--color-paper) 25%, transparent);
 }
 
 .prose-axleta {
-  color: var(--color-text);
+  color: var(--color-ink);
+  max-width: 62ch;
 }
 
 .prose-axleta h2 {
-  font-family: var(--font-heading);
+  font-family: var(--font-display);
   font-size: clamp(1.3rem, 1.3vw + 0.9rem, 1.55rem);
   font-weight: 700;
   margin-top: 2rem;
   margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
 }
 
 .prose-axleta h3 {
-  font-family: var(--font-heading);
+  font-family: var(--font-display);
   font-size: 1.125rem;
   font-weight: 600;
   margin-top: 1.5rem;
@@ -277,30 +408,31 @@
 }
 
 .prose-axleta a {
-  color: var(--color-brand-hover);
+  color: var(--color-oxide-dim);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
 .prose-axleta blockquote {
-  border-left: 3px solid var(--color-brand);
+  border-left: 1px solid var(--color-oxide);
   padding-left: 1rem;
-  color: var(--color-text-muted);
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: color-mix(in srgb, var(--color-ink) 70%, transparent);
   margin: 1.5rem 0;
 }
 
 .prose-axleta code {
-  font-size: 0.9em;
-  background: var(--color-brand-soft);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--color-paper-2);
   padding: 0.1em 0.35em;
-  border-radius: 4px;
 }
 
 .prose-axleta pre {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: var(--color-paper-2);
+  border: 1px solid color-mix(in srgb, var(--color-steel) 30%, transparent);
   padding: 1rem;
   overflow-x: auto;
-  border-radius: var(--radius-button);
   margin-bottom: 1rem;
 }

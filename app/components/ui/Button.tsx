@@ -5,16 +5,15 @@ import type { ReactNode } from "react";
 type Variant = "primary" | "secondary" | "ghost" | "link";
 
 const base =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-[var(--radius-button)] px-5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 font-mono text-[0.7rem] font-medium tracking-[0.12em] uppercase transition-colors disabled:cursor-not-allowed disabled:opacity-50";
 
 const variants: Record<Variant, string> = {
-  primary:
-    "bg-[var(--color-brand)] text-white shadow-[0_10px_28px_color-mix(in_srgb,var(--color-brand)_38%,transparent)] hover:bg-[var(--color-brand-hover)]",
+  primary: "bg-oxide text-paper hover:bg-[var(--color-oxide-dim)]",
   secondary:
-    "border border-white/40 bg-white/10 text-white backdrop-blur hover:bg-white/20",
+    "border border-paper/40 bg-transparent text-paper hover:bg-paper/10",
   ghost:
-    "border border-[var(--color-border)] bg-surface text-text hover:border-[var(--color-brand)] hover:bg-[var(--color-brand-soft)]",
-  link: "min-h-0 px-0 text-[var(--color-brand-hover)] underline-offset-4 hover:underline",
+    "border border-[color-mix(in_srgb,var(--color-steel)_40%,transparent)] bg-transparent text-ink hover:border-oxide hover:text-oxide",
+  link: "min-h-0 rounded-none px-0 font-mono text-[0.7rem] tracking-[0.12em] text-oxide uppercase link-draw",
 };
 
 type ButtonProps = {
@@ -35,7 +34,6 @@ type LinkButtonProps = {
 };
 
 const tap = { scale: 0.97 };
-const hover = { y: -1 };
 
 export function LinkButton({
   variant = "primary",
@@ -51,7 +49,7 @@ export function LinkButton({
     );
   }
   return (
-    <motion.div className="inline-flex" whileHover={hover} whileTap={tap}>
+    <motion.div className="inline-flex" whileTap={tap}>
       <Link to={to} className={`${base} ${variants[variant]} ${className}`}>
         {children}
       </Link>
@@ -73,7 +71,6 @@ export function Button({
       type={type}
       disabled={disabled || loading}
       onClick={onClick}
-      whileHover={disabled || loading ? undefined : hover}
       whileTap={disabled || loading ? undefined : tap}
       className={`${base} ${variants[variant]} ${className}`}
     >

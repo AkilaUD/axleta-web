@@ -22,6 +22,9 @@ type FormState = {
   website: string;
 };
 
+const fieldClass =
+  "min-h-11 w-full border-0 border-b border-[color-mix(in_srgb,var(--color-steel)_40%,transparent)] bg-transparent px-0 pb-2 text-ink outline-none transition-[border-color] focus:border-oxide";
+
 export function ContactForm({ initialInterest = "general" }: ContactFormProps) {
   const formId = import.meta.env.VITE_FORMSPREE_FORM_ID as string | undefined;
   const [form, setForm] = useState<FormState>({
@@ -43,18 +46,12 @@ export function ContactForm({ initialInterest = "general" }: ContactFormProps) {
 
   const validate = (): boolean => {
     const next: Partial<Record<keyof FormState, string>> = {};
-    if (!form.name.trim()) {
-      next.name = "Enter your name.";
-    }
+    if (!form.name.trim()) next.name = "Enter your name.";
     if (!form.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       next.email = "Enter a valid business email.";
     }
-    if (!form.message.trim()) {
-      next.message = "Tell us about your requirement.";
-    }
-    if (!form.consent) {
-      next.consent = "Consent is required to submit this form.";
-    }
+    if (!form.message.trim()) next.message = "Tell us about your requirement.";
+    if (!form.consent) next.consent = "Consent is required to submit this form.";
     setErrors(next);
     return Object.keys(next).length === 0;
   };
@@ -72,14 +69,15 @@ export function ContactForm({ initialInterest = "general" }: ContactFormProps) {
       );
       return;
     }
-    if (form.website) {
-      return;
-    }
+    if (form.website) return;
     setStatus("loading");
     try {
       const res = await fetch(`https://formspree.io/f/${formId}`, {
         method: "POST",
-        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           name: form.name,
           email: form.email,
@@ -88,9 +86,7 @@ export function ContactForm({ initialInterest = "general" }: ContactFormProps) {
           message: form.message,
         }),
       });
-      if (!res.ok) {
-        throw new Error("Submit failed");
-      }
+      if (!res.ok) throw new Error("Submit failed");
       setStatus("success");
       setStatusMessage("Thank you. We will respond as soon as we can.");
       setForm({
@@ -110,25 +106,37 @@ export function ContactForm({ initialInterest = "general" }: ContactFormProps) {
     }
   };
 
+  if (status === "success") {
+    return (
+      <div className="border border-[color-mix(in_srgb,var(--color-steel)_35%,transparent)] bg-paper p-8">
+        <p className="text-label text-oxide">Received</p>
+        <p className="mt-3 font-display text-2xl font-semibold tracking-[-0.03em]">
+          Thank you.
+        </p>
+        <p className="mt-3 text-ink/70">{statusMessage}</p>
+      </div>
+    );
+  }
+
   if (!formId) {
     return (
-      <div className="rounded-[var(--radius-card)] border border-subtle bg-[var(--color-brand-soft)] p-6">
-        <p className="text-text">
-          Online form requires <code className="text-sm">VITE_FORMSPREE_FORM_ID</code>{" "}
-          in your environment. Until then, contact us directly:
+      <div className="border border-[color-mix(in_srgb,var(--color-steel)_35%,transparent)] bg-paper p-6">
+        <p className="text-label text-oxide">Direct contact</p>
+        <p className="mt-3 text-ink/75">
+          The online form is not configured yet. Email us and we will follow up.
         </p>
         <a
           href={`mailto:${site.email}`}
-          className="mt-4 inline-flex font-semibold text-[var(--color-brand-hover)] hover:underline"
+          className="text-label mt-5 inline-flex text-oxide link-draw"
         >
-          {site.email}
+          {site.email} →
         </a>
       </div>
     );
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-5">
+    <form onSubmit={onSubmit} noValidate className="space-y-6">
       <div className="absolute -left-[9999px]" aria-hidden>
         <label htmlFor="website">Website</label>
         <input
@@ -163,7 +171,7 @@ export function ContactForm({ initialInterest = "general" }: ContactFormProps) {
         onChange={(v) => setForm({ ...form, company: v })}
       />
       <div>
-        <label htmlFor="interest" className="mb-1.5 block text-sm font-medium">
+        <label htmlFor="interest" className="text-label mb-1.5 block text-steel">
           Area of interest
         </label>
         <select
@@ -175,7 +183,7 @@ export function ContactForm({ initialInterest = "general" }: ContactFormProps) {
               interest: parseContactInterest(e.target.value),
             })
           }
-          className="min-h-11 w-full rounded-[var(--radius-button)] border border-subtle bg-surface px-3"
+          className={fieldClass}
         >
           {contactInterestOptions.map((o) => (
             <option key={o.value} value={o.value}>
@@ -185,8 +193,8 @@ export function ContactForm({ initialInterest = "general" }: ContactFormProps) {
         </select>
       </div>
       <div>
-        <label htmlFor="message" className="mb-1.5 block text-sm font-medium">
-          Message
+        <label htmlFor="message" className="text-label mb-1.5 block text-steel">
+          Message *
         </label>
         <textarea
           id="message"
@@ -196,10 +204,10 @@ export function ContactForm({ initialInterest = "general" }: ContactFormProps) {
           aria-describedby={errors.message ? "message-error" : undefined}
           value={form.message}
           onChange={(e) => setForm({ ...form, message: e.target.value })}
-          className="w-full rounded-[var(--radius-button)] border border-subtle bg-surface px-3 py-2"
+          className={`${fieldClass} py-2`}
         />
         {errors.message ? (
-          <p id="message-error" className="mt-1 text-sm text-[var(--color-negative)]">
+          <p id="message-error" className="mt-1 text-sm text-oxide">
             {errors.message}
           </p>
         ) : null}
@@ -212,30 +220,33 @@ export function ContactForm({ initialInterest = "general" }: ContactFormProps) {
           onChange={(e) => setForm({ ...form, consent: e.target.checked })}
           aria-invalid={Boolean(errors.consent)}
           aria-describedby={errors.consent ? "consent-error" : undefined}
-          className="mt-1 size-4"
+          className="mt-1 size-4 accent-[var(--color-oxide)]"
         />
-        <label htmlFor="consent" className="text-small text-muted">
+        <label htmlFor="consent" className="text-sm text-ink/70">
           I agree to Axleta processing my details to respond to this enquiry. See{" "}
-          <Link to="/privacy" className="text-[var(--color-brand-hover)] underline">
+          <Link to="/privacy" className="text-oxide link-draw">
             Privacy
           </Link>
           .
         </label>
       </div>
       {errors.consent ? (
-        <p id="consent-error" className="text-sm text-[var(--color-negative)]">
+        <p id="consent-error" className="text-sm text-oxide">
           {errors.consent}
         </p>
       ) : null}
       <Button type="submit" loading={status === "loading"}>
         Send message
       </Button>
-      <p aria-live="polite" className="text-sm text-muted">
+      <p
+        aria-live="polite"
+        className={`text-sm ${status === "error" ? "text-oxide" : "text-ink/60"}`}
+      >
         {statusMessage}
       </p>
-      <p className="text-small text-muted">
+      <p className="text-sm text-ink/55">
         Or email{" "}
-        <a href={`mailto:${site.email}`} className="text-[var(--color-brand-hover)] underline">
+        <a href={`mailto:${site.email}`} className="text-oxide link-draw">
           {site.email}
         </a>
       </p>
@@ -261,8 +272,8 @@ function Field({
   required?: boolean;
 }) {
   return (
-    <div>
-      <label htmlFor={id} className="mb-1.5 block text-sm font-medium">
+    <div className="relative pt-5">
+      <label htmlFor={id} className="text-label absolute top-0 left-0 text-steel">
         {label}
         {required ? " *" : ""}
       </label>
@@ -274,10 +285,10 @@ function Field({
         aria-invalid={Boolean(error)}
         aria-describedby={error ? `${id}-error` : undefined}
         onChange={(e) => onChange(e.target.value)}
-        className="min-h-11 w-full rounded-[var(--radius-button)] border border-subtle bg-surface px-3"
+        className={fieldClass}
       />
       {error ? (
-        <p id={`${id}-error`} className="mt-1 text-sm text-[var(--color-negative)]">
+        <p id={`${id}-error`} className="mt-1 text-sm text-oxide">
           {error}
         </p>
       ) : null}

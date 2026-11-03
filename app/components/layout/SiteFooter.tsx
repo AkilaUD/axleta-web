@@ -1,63 +1,80 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { site } from "~/data/site";
+import { site, legalDisclaimer } from "~/lib/content";
 import {
   footerCompany,
   footerServices,
   footerSolutions,
 } from "~/data/navigation";
-import { BrandMark } from "~/components/ui/BrandMark";
-import { Container } from "~/components/ui/Container";
+import { Logo } from "~/components/svg/Logo";
+import { LinkArrow } from "~/components/ui/LinkArrow";
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-subtle bg-surface pb-[env(safe-area-inset-bottom)] pt-16">
-      <Container className="grid gap-12 lg:grid-cols-4">
-        <div className="space-y-4 lg:col-span-1">
-          <Link to="/" className="flex items-center gap-2 text-text">
-            <BrandMark className="h-7 w-7" />
-            <span className="font-[family-name:var(--font-heading)] text-lg font-semibold">
-              {site.name}
-            </span>
-          </Link>
-          <p className="max-w-xs text-body-lg leading-snug text-muted">
-            {site.positioning}
-          </p>
+    <footer className="relative overflow-hidden bg-ink pb-[env(safe-area-inset-bottom)] text-paper">
+      <div className="grain grain--ink" aria-hidden />
+      <div className="relative z-[1] mx-auto max-w-[90rem] px-[clamp(1.25rem,4vw,2.5rem)] pt-20">
+        <div className="mb-16 flex flex-col gap-8 border-b border-[color-mix(in_srgb,var(--color-steel)_30%,transparent)] pb-10 md:flex-row md:items-end md:justify-between">
+          <div className="space-y-4">
+            <Link to="/" aria-label="Axleta home">
+              <Logo variant="footer" />
+            </Link>
+            <p className="max-w-md font-serif text-xl italic text-paper/75">
+              {site.positioning}
+            </p>
+          </div>
+          <BramptonClock />
         </div>
-        <FooterColumn title="Solutions" items={footerSolutions} />
-        <FooterColumn title="Services" items={footerServices} />
-        <FooterColumn title="Company" items={footerCompany} />
-      </Container>
-      <Container className="mt-14 space-y-3 border-t border-subtle py-8 text-small text-muted">
-        <p>
-          {site.address.label} — {site.address.line1}, {site.address.city},{" "}
-          {site.address.region} {site.address.postal}
-        </p>
-        <p>
-          <a
-            href={`mailto:${site.email}`}
-            className="text-[var(--color-brand-hover)] hover:underline"
-          >
-            {site.email}
-          </a>
-          {" · "}
-          <a
-            href={site.linkedIn}
-            rel="noopener noreferrer"
-            target="_blank"
-            className="text-[var(--color-brand-hover)] hover:underline"
-          >
-            LinkedIn
-          </a>
-        </p>
-        <p className="max-w-3xl leading-relaxed">
-          SAP and PartnerEdge are trademarks of SAP SE. Google, Google Cloud, and
-          Google Workspace are trademarks of Google LLC. {site.name} is not SAP or
-          Google.
-        </p>
-        <p>© {year} {site.name}</p>
-      </Container>
+
+        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
+          <FooterColumn title="Solutions" items={footerSolutions} />
+          <FooterColumn title="Services" items={footerServices} />
+          <FooterColumn title="Company" items={footerCompany} />
+          <div>
+            <p className="text-label mb-4 text-steel">Contact</p>
+            <ul className="space-y-3 text-sm text-paper/70">
+              <li>
+                {site.address.label} — {site.address.line1}, {site.address.city}
+                , {site.address.region} {site.address.postal}
+              </li>
+              <li>
+                <a
+                  href={`mailto:${site.email}`}
+                  className="link-draw text-paper"
+                >
+                  {site.email}
+                </a>
+              </li>
+              <li>
+                <LinkArrow
+                  to={site.linkedIn}
+                  external
+                  className="text-paper/80"
+                >
+                  LinkedIn
+                </LinkArrow>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-16 space-y-3 border-t border-[color-mix(in_srgb,var(--color-steel)_30%,transparent)] py-8 text-sm text-paper/55">
+          <p className="max-w-3xl leading-relaxed">{legalDisclaimer}</p>
+          <div className="flex flex-wrap gap-4 text-label">
+            <Link to="/privacy" className="link-draw">
+              Privacy
+            </Link>
+            <Link to="/terms" className="link-draw">
+              Terms
+            </Link>
+            <span>
+              © {year} {site.name}
+            </span>
+          </div>
+        </div>
+      </div>
     </footer>
   );
 }
@@ -71,13 +88,13 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <p className="mb-4 text-eyebrow">{title}</p>
-      <ul className="space-y-2 text-small">
+      <p className="text-label mb-4 text-steel">{title}</p>
+      <ul className="space-y-2">
         {items.map((item) => (
           <li key={item.href}>
             <Link
               to={item.href}
-              className="text-muted hover:text-[var(--color-brand-hover)] hover:underline"
+              className="text-sm text-paper/65 transition-colors hover:text-paper link-draw"
             >
               {item.label}
             </Link>
@@ -85,5 +102,31 @@ function FooterColumn({
         ))}
       </ul>
     </div>
+  );
+}
+
+function BramptonClock() {
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    const format = () => {
+      const formatted = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "America/Toronto",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      }).format(new Date());
+      setTime(formatted);
+    };
+    format();
+    const id = window.setInterval(format, 1000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  return (
+    <p className="text-label text-steel" suppressHydrationWarning>
+      Brampton, ON — local time{time ? ` ${time}` : ""}
+    </p>
   );
 }
