@@ -1,10 +1,8 @@
 import { AnimatePresence, motion } from "motion/react";
 import { Link } from "react-router";
 import { megaPreviewFamilies } from "~/lib/content";
-import {
-  megaSchematics,
-  type MegaSchematicId,
-} from "~/components/svg/schematics/MegaPreviews";
+import { getImage } from "~/data/images";
+import type { MegaSchematicId } from "~/components/svg/schematics/MegaPreviews";
 
 type MegaMenuProps = {
   open: boolean;
@@ -12,6 +10,15 @@ type MegaMenuProps = {
   activeId: MegaSchematicId;
   onActiveId: (id: MegaSchematicId) => void;
   onClose: () => void;
+};
+
+const MEGA_IMAGE: Record<MegaSchematicId, string> = {
+  erp: "spec-erp",
+  connected: "spec-connected",
+  cloud: "spec-infrastructure",
+  productivity: "spec-productivity",
+  automation: "spec-automation",
+  advisory: "spec-advisory",
 };
 
 const serviceLinks = [
@@ -30,7 +37,7 @@ export function MegaMenu({
   onActiveId,
   onClose,
 }: MegaMenuProps) {
-  const Schematic = megaSchematics[activeId];
+  const preview = getImage(MEGA_IMAGE[activeId]);
   const activeFamily =
     megaPreviewFamilies.find((f) => f.id === activeId) ?? megaPreviewFamilies[0];
 
@@ -109,7 +116,19 @@ export function MegaMenu({
                       transition={{ duration: 0.28 }}
                       className="flex flex-1 flex-col"
                     >
-                      <Schematic className="mx-auto h-44 w-full max-w-sm text-paper" />
+                      {preview ? (
+                        <div className="mx-auto aspect-[4/3] w-full max-w-sm overflow-hidden rounded-sm border border-[color-mix(in_srgb,var(--color-steel)_25%,transparent)] bg-graphite">
+                          <img
+                            src={preview.path}
+                            alt={preview.alt}
+                            width={preview.width}
+                            height={preview.height}
+                            className="h-full w-full object-cover object-center"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        </div>
+                      ) : null}
                       <p className="mt-8 font-serif text-xl italic text-paper/80">
                         {activeFamily.blurb}
                       </p>

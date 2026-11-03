@@ -1,14 +1,10 @@
-import { useRef, useState, type ComponentType } from "react";
+import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Link } from "react-router";
 import { ensureGsap } from "~/lib/gsap-setup";
 import { capabilities } from "~/lib/content";
 import { getImage } from "~/data/images";
 import { usePrefersReducedMotion } from "~/hooks/usePrefersReducedMotion";
-import {
-  megaSchematics,
-  type MegaSchematicId,
-} from "~/components/svg/schematics/MegaPreviews";
 
 const INCLUDED: Record<string, string[]> = {
   erp: [
@@ -52,13 +48,14 @@ const INCLUDED: Record<string, string[]> = {
   ],
 };
 
-const ID_MAP: Record<string, MegaSchematicId> = {
-  erp: "erp",
-  connected: "connected",
-  infrastructure: "cloud",
-  productivity: "productivity",
-  automation: "automation",
-  advisory: "advisory",
+/** Capability id → photographic preview asset. */
+const IMAGE_MAP: Record<string, string> = {
+  erp: "spec-erp",
+  connected: "spec-connected",
+  infrastructure: "spec-infrastructure",
+  productivity: "spec-productivity",
+  automation: "spec-automation",
+  advisory: "spec-advisory",
 };
 
 /** S3 — Merged capabilities + solution families as a scroll-pinned spec index. */
@@ -101,8 +98,6 @@ export function SpecSheet() {
   );
 
   const current = capabilities[active] ?? capabilities[0];
-  const schematicId = ID_MAP[current.id] ?? "erp";
-  const Schematic = megaSchematics[schematicId];
   const included = INCLUDED[current.id] ?? [];
 
   return (
@@ -120,7 +115,10 @@ export function SpecSheet() {
         </h2>
         <ul className="mt-10 space-y-2">
           {capabilities.map((cap, i) => (
-            <li key={cap.id} className="border border-[color-mix(in_srgb,var(--color-steel)_30%,transparent)]">
+            <li
+              key={cap.id}
+              className="border border-[color-mix(in_srgb,var(--color-steel)_30%,transparent)]"
+            >
               <button
                 type="button"
                 className="flex w-full items-baseline gap-3 px-4 py-4 text-left"
@@ -143,9 +141,8 @@ export function SpecSheet() {
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden px-4 pb-5"
                   >
-                    <SchematicPreview
-                      Schematic={megaSchematics[ID_MAP[cap.id] ?? "erp"]}
-                      imageId={cap.id === "erp" ? "schematic-erp" : undefined}
+                    <CapabilityPreview
+                      imageId={IMAGE_MAP[cap.id]}
                       description={cap.description}
                       included={INCLUDED[cap.id] ?? []}
                       href={cap.href}
@@ -204,9 +201,8 @@ export function SpecSheet() {
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.28 }}
               >
-                <SchematicPreview
-                  Schematic={Schematic}
-                  imageId={current.id === "erp" ? "schematic-erp" : undefined}
+                <CapabilityPreview
+                  imageId={IMAGE_MAP[current.id]}
                   description={current.description}
                   included={included}
                   href={current.href}
@@ -220,14 +216,12 @@ export function SpecSheet() {
   );
 }
 
-function SchematicPreview({
-  Schematic,
+function CapabilityPreview({
   imageId,
   description,
   included,
   href,
 }: {
-  Schematic: ComponentType<{ className?: string }>;
   imageId?: string;
   description: string;
   included: string[];
@@ -242,8 +236,7 @@ function SchematicPreview({
         <div className="mx-auto aspect-square w-full max-w-sm overflow-hidden rounded-sm border border-[color-mix(in_srgb,var(--color-steel)_25%,transparent)] bg-graphite">
           <img
             src={art.path}
-            alt=""
-            aria-hidden
+            alt={art.alt}
             width={art.width}
             height={art.height}
             className="h-full w-full object-cover object-center"
@@ -252,9 +245,7 @@ function SchematicPreview({
           />
         </div>
       ) : (
-        <div className="mx-auto flex h-40 w-full max-w-sm items-center justify-center overflow-hidden">
-          <Schematic className="h-36 w-full text-paper" />
-        </div>
+        <div className="mx-auto aspect-square w-full max-w-sm bg-graphite" />
       )}
       <p className="mt-6 max-w-md text-paper/80">{description}</p>
       <ul className="mt-5 space-y-1">
